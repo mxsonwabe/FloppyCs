@@ -18,9 +18,9 @@ public struct Floppy
     public Color color;
 };
 
-public struct Tubes
+public struct Tube
 {
-    public Rectangle rec;
+    public Rectangle rectangle;
     public Color color;
     public bool isActive;
 }

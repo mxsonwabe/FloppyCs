@@ -19,14 +19,72 @@ public class GameState
     public Floppy Floppy { get; set; }
 
     public int TubeSpeedX { get; set; } = 0;
-    public List<Tubes> Pipes = new List<Tubes>();
-    public List<Vector2> PipePos = new List<Vector2>();
+    public Tube[] Tubes = new Tube[MAX_TUBES * 2];
+    public Vector2[] TubePos = new Vector2[MAX_TUBES];
 
     public bool Superfx { get; set; } = false;
     public string Content { get; set; } = "Start";
     public float Target { get; set; } = 0f;
 
-    public void InitGame() { }
+    public void InitGame()
+    {
+        // Initialise bird details
+        Floppy = new Floppy
+        {
+            radius = FLOPPY_RADIUS,
+            position = new Vector2(0, SCREEN_HEIGHT / 2 - FLOPPY_RADIUS),
+            color = Color.Red,
+        };
+        TubeSpeedX = 2;
+
+        // Initialise position for tubes
+        Random rand = new Random();
+        for (int i = 0; i < MAX_TUBES; i++)
+        {
+            TubePos[i] = new Vector2(400 + (280 * i), rand.Next(0, 120));
+        }
+
+        // Initialize tube creation
+        for (int i = 0; i < MAX_TUBES * 2; i += 2)
+        {
+            // Initialise `top` tubes
+            Tubes[i] = new Tube
+            {
+                color = Color.Green,
+                rectangle = new Rectangle
+                {
+                    Height = 255,
+                    Width = TUBE_WIDTH,
+                    X = TubePos[i / 2].X,
+                    Y = TubePos[i / 2].Y,
+                },
+            };
+
+            // Initialise `bottom` tubes
+            Tubes[i + 1] = new Tube
+            {
+                color = Color.Green,
+                rectangle = new Rectangle
+                {
+                    Height = 255,
+                    Width = TUBE_WIDTH,
+                    X = TubePos[i / 2].X,
+                    Y = 600 + TubePos[i / 2].Y - 255,
+                },
+            };
+
+            Tubes[i / 2] = new Tube
+            {
+                color = Tubes[i / 2].color,
+                rectangle = Tubes[i / 2].rectangle,
+                isActive = true,
+            };
+        }
+        Score = 0;
+        GameOver = false;
+        Superfx = false;
+        Pause = false;
+    }
 
     public void UpdateGame()
     {
