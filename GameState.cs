@@ -32,7 +32,7 @@ public class GameState
         Floppy = new Floppy
         {
             radius = FLOPPY_RADIUS,
-            position = new Vector2(0, SCREEN_HEIGHT / 2 - FLOPPY_RADIUS),
+            position = new Vector2(80, SCREEN_HEIGHT / 2 - FLOPPY_RADIUS),
             color = Color.Red,
         };
         TubeSpeedX = 2;
@@ -41,7 +41,7 @@ public class GameState
         Random rand = new Random();
         for (int i = 0; i < MAX_TUBES; i++)
         {
-            TubePos[i] = new Vector2(400 + (280 * i), rand.Next(0, 120));
+            TubePos[i] = new Vector2(400 + (280 * i), -rand.Next(0, 121));
         }
 
         // Initialize tube creation
@@ -73,12 +73,7 @@ public class GameState
                 },
             };
 
-            Tubes[i / 2] = new Tube
-            {
-                color = Tubes[i / 2].color,
-                rectangle = Tubes[i / 2].rectangle,
-                isActive = true,
-            };
+            Tubes[i / 2].isActive = true;
         }
         Score = 0;
         GameOver = false;
