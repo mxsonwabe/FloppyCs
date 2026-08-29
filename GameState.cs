@@ -144,15 +144,6 @@ public class GameState
         if (!GameOver)
         {
             // draw bird
-<<<<<<< HEAD
-            // Raylib.DrawCircle(
-            //     (int)Floppy.position.X,
-            //     (int)Floppy.position.Y,
-            //     Floppy.radius,
-            //     Color.DarkBrown
-            // );
-=======
->>>>>>> 576a768 (Update GameState.cs and Program.cs)
             Raylib.DrawCircleV(Floppy.position, Floppy.radius, Color.Red);
             Raylib.DrawCircleLines(
                 (int)Floppy.position.X,
