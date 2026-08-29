@@ -33,6 +33,7 @@ internal static class Program
         GameState game = new();
         Raylib.InitWindow(GameState.SCREEN_WIDTH, GameState.SCREEN_HEIGHT, "Floppy Bird");
         game.InitGame();
+        Raylib.SetTargetFPS(60);
 
         // main game-loop
         while (!Raylib.WindowShouldClose())

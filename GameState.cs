@@ -8,17 +8,17 @@ public class GameState
     public const int Time = 10;
     public const int TUBE_WIDTH = 80;
     public const int MAX_TUBES = 100;
-    public const int FLOPPY_RADIUS = 24;
+    public const int FLOPPY_RADIUS = 16;
     public const int SCREEN_WIDTH = 800;
     public const int SCREEN_HEIGHT = 450;
     public bool GameOver { get; set; }
-    public bool Pause { get; set; }
+    public bool Paused { get; set; }
     public int Score { get; set; }
     public int HighScore { get; set; }
 
     public Floppy Floppy;
 
-    public int TubeSpeedX { get; set; } = 0;
+    public float TubeSpeedX { get; set; } = 0;
     public Tube[] Tubes = new Tube[MAX_TUBES * 2];
     public Vector2[] TubePos = new Vector2[MAX_TUBES];
 
@@ -78,16 +78,61 @@ public class GameState
         Score = 0;
         GameOver = false;
         Superfx = false;
-        Pause = false;
+        Paused = false;
     }
 
     public void UpdateGame()
     {
-        // Content = $"\t\t\t\t\t\t\t\t\t\t\tRayMans\n{Guid.CreateVersion7().ToString()}";
         Content = $"RayMans\n{Guid.CreateVersion7().ToString()}";
         Target += Raylib.GetFrameTime() / Time;
         if (Target >= 1.0f)
             Target = 0.0f;
+
+        if (!GameOver)
+        {
+            if (Raylib.IsKeyPressed(KeyboardKey.P))
+                Paused = !Paused;
+            if (!Paused)
+            {
+                if (Raylib.IsKeyDown(KeyboardKey.Space))
+                    Floppy.position.Y -= 3;
+                else
+                    Floppy.position.Y += 2;
+
+                for (int i = 0; i < MAX_TUBES; i++)
+                    TubePos[i].X -= TubeSpeedX;
+                for (int i = 0; i < MAX_TUBES * 2; i += 2)
+                {
+                    Tubes[i].rectangle.X = TubePos[i / 2].X;
+                    Tubes[i + 1].rectangle.X = TubePos[i / 2].X;
+                }
+
+                for (int i = 0; i < MAX_TUBES * 2; i++)
+                {
+                    if (Raylib.CheckCollisionCircleRec(Floppy.position, Floppy.radius, Tubes[i].rectangle))
+                    {
+                        GameOver = true;
+                        Paused = false;
+                    }
+                    else if (TubePos[i / 2].X < Floppy.position.X && Tubes[i / 2].isActive && !GameOver)
+                    {
+                        Score += 100;
+                        Tubes[i / 2].isActive = false;
+                        Superfx = true;
+                        if (Score > HighScore)
+                            HighScore = Score;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (Raylib.IsKeyPressed(KeyboardKey.Enter))
+            {
+                InitGame();
+                GameOver = false;
+            }
+        }
     }
 
     public void DrawGame()
@@ -99,12 +144,15 @@ public class GameState
         if (!GameOver)
         {
             // draw bird
+<<<<<<< HEAD
             // Raylib.DrawCircle(
             //     (int)Floppy.position.X,
             //     (int)Floppy.position.Y,
             //     Floppy.radius,
             //     Color.DarkBrown
             // );
+=======
+>>>>>>> 576a768 (Update GameState.cs and Program.cs)
             Raylib.DrawCircleV(Floppy.position, Floppy.radius, Color.Red);
             Raylib.DrawCircleLines(
                 (int)Floppy.position.X,
@@ -145,7 +193,7 @@ public class GameState
             Raylib.DrawText($"HI-SCORE: {HighScore}", 20, 70, 20, Color.LightGray);
 
             // add logic for pause
-            if (Pause)
+            if (Paused)
             {
                 Raylib.DrawText(
                     "GAME PAUSED",
